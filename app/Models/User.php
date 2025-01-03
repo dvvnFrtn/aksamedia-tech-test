@@ -15,7 +15,6 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
 
     public $incrementing = false;
-
     protected $keyType = 'string';
 
     /**
@@ -53,7 +52,7 @@ class User extends Authenticatable
     }
 
     public static function booted() {
-        static::creating(function ($model) {
+        static::creating(function($model) {
             $model->id = Str::uuid();
         });
     }

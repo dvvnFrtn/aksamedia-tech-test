@@ -1,12 +1,9 @@
 <?php
 
-use App\Helpers\ApiResponse;
+use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Middleware\EnsureGuest;
-use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +16,5 @@ Route::post('/login', LoginController::class)
 
 Route::post('/logout', LogoutController::class)
     ->middleware('auth:sanctum');
+
+Route::get('/divisions', DivisionController::class);
