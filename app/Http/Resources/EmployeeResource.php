@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeResource extends JsonResource
 {
@@ -18,7 +19,7 @@ class EmployeeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'phone' => $this->phone,
-            'image' => $this->image,
+            'image' => Storage::url($this->image),
             'division' => new DivisionResource($this->whenLoaded('division')),
             'position' => $this->position,
             'created_at' => $this->created_at,

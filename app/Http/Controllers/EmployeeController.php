@@ -46,7 +46,7 @@ class EmployeeController extends Controller
         
         $originalName = $request->file('image')->getClientOriginalName();
         $extension = $request->file('image')->getClientOriginalExtension();
-        $uniqueName = Str::uuid() . '_' . pathinfo($originalName, PATHINFO_FILENAME) . '.' . $extension;
+        $uniqueName = Str::uuid() . '_' . 'employee_image' . '.' . $extension;
         $imagePath = $request->file('image')->storeAs('employees', $uniqueName, 'public');
 
         $employee = new Employee();
@@ -87,7 +87,7 @@ class EmployeeController extends Controller
         }
         $originalName = $request->file('image')->getClientOriginalName();
         $extension = $request->file('image')->getClientOriginalExtension();
-        $uniqueName = Str::uuid() . '_' . pathinfo($originalName, PATHINFO_FILENAME) . '.' . $extension;
+        $uniqueName = Str::uuid() . '_' . 'employee_image' . '.' . $extension;
 
         $imagePath = $request->file('image')->storeAs('employees', $uniqueName, 'public');
         $validated['image'] = $imagePath;
@@ -105,8 +105,14 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Employee $employee)
+    public function destroys(string $uuid)
     {
-        //
+        $employee = Employee::findOrFail($uuid);   
+        $employee->delete();
+
+        return ApiResponse::success(
+            null,
+            'Employee delete successful',
+        );
     }
 }

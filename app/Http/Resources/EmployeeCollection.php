@@ -14,16 +14,19 @@ class EmployeeCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
+        $perPage = $this->perPage();
+        $nextPageUrl = $this->nextPageUrl() ? $this->nextPageUrl() . "&per_page=$perPage" : null; 
+        $prevPageUrl = $this->previousPageUrl() ? $this->previousPageUrl() . "&per_page=$perPage" : null;
         return [
             'employees' => $this->collection,
             'pagination' => [
                 'total' => $this->total(),
                 'count' => $this->count(),
-                'last_page_url' => $this->url($this->lastPage()),
-                'next_page_url' => $this->nextPageUrl(),
-                'previous_page_url' => $this->previousPageUrl(),
-                'first_page_url' => $this->url(1),
-                'per_page' => $this->perPage(),
+                'last_page_url' => $this->url($this->lastPage()) . "&per_page=$perPage",
+                'next_page_url' => $nextPageUrl,
+                'prev_page_url' => $prevPageUrl,
+                'first_page_url' => $this->url(1) . "&per_page=$perPage",
+                'per_page' => $perPage,
                 'current_page' => $this->currentPage(),
                 'total_pages' => $this->lastPage(),
             ],
