@@ -55,7 +55,7 @@ class EmployeeController extends Controller
         $employee->name = $validated['name'];
         $employee->phone = $validated['phone'];
         $employee->position = $validated['position'];
-        $employee->image = Storage::url($imagePath);
+        $employee->image = $imagePath;
         $employee->division()->associate($division);
         $employee->save();
 
@@ -77,9 +77,29 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeRequest $request, string $uuid)
     {
-        //
+        $employee = Employee::findOrFail( $uuid );
+        $validated = $request->validated();
+
+        if ($employee->image && Storage::exists($employee->image)) {
+            Storage::delete($employee->image);
+        }
+        $originalName = $request->file('image')->getClientOriginalName();
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $uniqueName = Str::uuid() . '_' . pathinfo($originalName, PATHINFO_FILENAME) . '.' . $extension;
+
+        $imagePath = $request->file('image')->storeAs('employees', $uniqueName, 'public');
+        $validated['image'] = $imagePath;
+        
+
+        $employee->update($validated);
+
+        return ApiResponse::success(
+            new EmployeeResource($employee),
+            'Employee update successful',
+            Response::HTTP_CREATED
+        );
     }
 
     /**

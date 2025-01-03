@@ -18,6 +18,11 @@ Route::post('/login', LoginController::class)
 Route::post('/logout', LogoutController::class)
     ->middleware('auth:sanctum');
 
-Route::get('/divisions', DivisionController::class);
-
-Route::apiResource('/employees', EmployeeController::class);
+Route::middleware('auth:sanctum')->group(function() {
+        Route::get('/divisions', DivisionController::class);
+        Route::get('/employees', [EmployeeController::class, 'index']);
+        Route::post('/employees', [EmployeeController::class, 'store']);
+        Route::put('/employees/{uuid}', [EmployeeController::class, 'update']);
+        Route::delete('/employees/{uuid}', [EmployeeController::class, 'destroy']);
+    }
+);
