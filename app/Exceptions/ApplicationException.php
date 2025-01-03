@@ -36,4 +36,9 @@ class ApplicationException extends Exception
     {
         return $this->description;
     }
+
+    public static function routeNotFound(): self
+    {
+        return static::new(ExceptionCode::RouteNotFound);
+    }
 }

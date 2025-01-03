@@ -5,6 +5,7 @@ use App\Exceptions\AuthException;
 use App\Exceptions\ResourceException;
 use App\Helpers\ApiResponse;
 use App\Http\Middleware\EnsureGuest;
+use App\Http\Middleware\ForceAcceptJson;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -23,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->prepend(ForceAcceptJson::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function(ValidationException $e) {
@@ -31,7 +32,10 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function(NotFoundHttpException $e) {
-            throw ResourceException::notFound();
+            if ($e->getPrevious() instanceof ModelNotFoundException) {
+                throw ResourceException::notFound();
+            }
+            throw ApplicationException::routeNotFound();
         });
 
         $exceptions->render(function(AuthenticationException $e, Request $request) {

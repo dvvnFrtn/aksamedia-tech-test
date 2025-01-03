@@ -20,5 +20,9 @@ return [
     '2001' => [
         'message' => 'Resource not found',
         'description' => 'The requested resource could not be found in our system'
+    ],
+    '2002' => [
+        'message' => 'Route not found',
+        'description' => 'The requested route could not be found in our system'
     ]
 ];
