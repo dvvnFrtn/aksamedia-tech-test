@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Division extends Model
+class Employee extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,11 @@ class Division extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name'
+        'name',
+        'phone',
+        'image',
+        'position',
+        'division_id',
     ];
 
     public static function booted() {
@@ -23,8 +27,8 @@ class Division extends Model
         });
     }
 
-    public function employees()
+    public function division()
     {
-        return $this->hasMany(Employee::class);
+        return $this->belongsTo(Division::class);
     }
 }

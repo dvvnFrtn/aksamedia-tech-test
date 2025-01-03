@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Middleware\EnsureGuest;
@@ -18,3 +19,5 @@ Route::post('/logout', LogoutController::class)
     ->middleware('auth:sanctum');
 
 Route::get('/divisions', DivisionController::class);
+
+Route::apiResource('/employees', EmployeeController::class);
