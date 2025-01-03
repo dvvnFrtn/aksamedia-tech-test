@@ -60,7 +60,7 @@ class EmployeeController extends Controller
         $employee->save();
 
         return ApiResponse::success(
-            new EmployeeResource($employee),
+            ['id' => $employee->id],
             'Employee create successful',
             Response::HTTP_CREATED
         );
@@ -96,7 +96,7 @@ class EmployeeController extends Controller
         $employee->update($validated);
 
         return ApiResponse::success(
-            new EmployeeResource($employee),
+            ['id' => $employee->id],
             'Employee update successful',
             Response::HTTP_CREATED
         );

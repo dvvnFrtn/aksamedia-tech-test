@@ -12,11 +12,10 @@ class ApiResponse
         $code = Response::HTTP_OK
     )
     {
-        return response()->json([
+        return response()->json(array_merge([
             'status' => 'success',
             'message' => $message,
-            'data' => $data
-        ], $code);
+        ], $data !== null ? ['data' => $data] : []), $code);
     }
 
     public static function error(
