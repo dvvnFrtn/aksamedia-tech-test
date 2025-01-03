@@ -11,6 +11,7 @@ enum ExceptionCode: int
     case TokenMissing       = 1003;
     case AlreadyAuth        = 1004;
     case RateLimitExceeded  = 1299;
+    case NotFound           = 2001;
 
     public function getStatusCode(): int
     {
@@ -18,6 +19,7 @@ enum ExceptionCode: int
         return match(true) {
             $value >= 1001 && $value <= 1010 => Response::HTTP_UNAUTHORIZED,
             $value == 1299 => Response::HTTP_TOO_MANY_REQUESTS,
+            $value == 2001 => Response::HTTP_NOT_FOUND,
             default => Response::HTTP_INTERNAL_SERVER_ERROR
         };
     }

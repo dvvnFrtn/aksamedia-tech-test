@@ -16,5 +16,9 @@ return [
     '1004' => [
         'message' => 'User already authenticated',
         'description'=> 'The user is already logged in. Please use the existing token or log out before attempting to log in again',
+    ],
+    '2001' => [
+        'message' => 'Resource not found',
+        'description' => 'The requested resource could not be found in our system'
     ]
 ];

@@ -2,15 +2,18 @@
 
 use App\Exceptions\ApplicationException;
 use App\Exceptions\AuthException;
+use App\Exceptions\ResourceException;
 use App\Helpers\ApiResponse;
 use App\Http\Middleware\EnsureGuest;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,6 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function(ValidationException $e) {
             return ApiResponse::validationError($e->errors());
+        });
+
+        $exceptions->render(function(NotFoundHttpException $e) {
+            throw ResourceException::notFound();
         });
 
         $exceptions->render(function(AuthenticationException $e, Request $request) {
