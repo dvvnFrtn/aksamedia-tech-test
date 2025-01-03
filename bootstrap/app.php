@@ -1,8 +1,16 @@
 <?php
 
+use App\Exceptions\ApplicationException;
+use App\Exceptions\AuthException;
+use App\Helpers\ApiResponse;
+use App\Http\Middleware\EnsureGuest;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,5 +23,27 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function(ValidationException $e) {
+            return ApiResponse::validationError($e->errors());
+        });
+
+        $exceptions->render(function(AuthenticationException $e, Request $request) {
+            if (empty($request->header('Authorization'))) {
+                throw AuthException::tokenMissing();
+            }
+
+            if (! Auth::guard('sanctum')->check()) {
+                throw AuthException::tokenExpired();
+            }
+        });
+
+        $exceptions->render(function(ApplicationException $e) {
+            $code = $e->getInternalCode();
+            return ApiResponse::error(
+                $code->value,
+                $e->getMessage(),
+                $e->getDescription(),
+                $e->getCode(),
+            );
+        });
     })->create();
